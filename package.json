@@ -1,0 +1,15 @@
+{
+  "name": "proyecto-navegador",
+  "version": "1.0.0",
+  "description": "Mi primer navegador con Electron",
+  "main": "main.js",
+  "scripts": {
+    "start": "echo Iniciando Navegador && electron ."
+  },
+  "keywords": [],
+  "author": "Luisfer",
+  "license": "MIT",
+  "dependencies": {
+    "electron": "^37.2.3"
+  }
+}
