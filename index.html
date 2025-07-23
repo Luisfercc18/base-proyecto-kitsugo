@@ -1,52 +1,111 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Controles</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kitsugo</title>
+  <link rel="icon" type="image/png" href="assets/kitsugo-logo.png">
   <style>
     body {
       margin: 0;
       padding: 10px;
       background-color: #f0f0f0;
       font-family: sans-serif;
-    }
-    #controles {
       display: flex;
-      gap: 10px;
+      flex-direction: column;
       align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
     }
-    button {
-      padding: 8px 12px;
-      font-size: 14px;
+    .contenedor {
+      text-align: center;
+      transform: translateY(-30%);
     }
-    input {
-      flex: 1;
-      padding: 8px;
-      font-size: 14px;
+
+    .logo {
+      width: 240px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: 24px;
+      color: #444;
+    }
+
+    p {
+      color: #666;
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+
+    .search-bar {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .search-bar input {
+      padding: 10px;
+      width: 300px;
+      border: 1px solid #ccc;
+      border-radius: 5px 0 0 5px;
+      font-size: 16px;
+    }
+
+    .search-bar button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 0 5px 5px 0;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .search-bar button:hover {
+      background-color: #45a049;
     }
   </style>
 </head>
+
 <body>
-  <div id="controles">
-    <button onclick="window.electronAPI.atras()">⏮️ Atrás</button>
-    <button onclick="window.electronAPI.adelante()">⏭️ Adelante</button>
-    <button onclick="window.electronAPI.home()">🏠 Inicio</button>
-    <input id="url" placeholder="https://..." />
-    <button onclick="enviarURL()">Ir</button>
-  </div>
+  <div class="contenedor">
+    <h1>Kitsugo</h1>
+  <img src="assets/kitsugo-logo.png" alt="Kitsugo Logo" class="logo">
+  <h1>Bienvenido a Kitsugo</h1>
+  <p>Tu Navegador Privado y Personal</p>
 
-  <script>
+  <form class="search-bar" onsubmit="return false;">
+    <input type="text" id="inputInicio" placeholder="Buscar o escribir URL...">
+    <button id="btnBuscar" type="button">Buscar</button>
+  </form>
 
-    function enviarURL() {
-      const urlInput = document.getElementById('url').value;
-      const finalURL = urlInput.startsWith('http') ? urlInput : 'https://' + urlInput;
-      window.electronAPI.navegarA(finalURL);
-    }
+    <script>
+    window.addEventListener("DOMContentLoaded", () => {
+      const input = document.getElementById("inputInicio");
+      const boton = document.getElementById("btnBuscar");
 
-    window.electronAPI.onUrlCambiada((url) => {
-      document.getElementById('url').value = url;
+      function buscar() {
+        const valor = input.value.trim();
+        if (valor === "") return;
+
+        const comienzaConHttp = /^https?:\/\//i.test(valor);
+        const destino = comienzaConHttp
+          ? valor
+          : `https://www.google.com/search?q=${encodeURIComponent(valor)}`;
+
+        console.log("Buscando:", destino);
+        window.electronAPI.navegarA(destino);
+      }
+
+      boton.addEventListener("click", buscar);
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") buscar();
+      });
     });
-  </script>
-  <script src="renderer.js"></script>
+    </script>
+  </div>
 </body>
 </html>

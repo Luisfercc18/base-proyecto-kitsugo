@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Kitsugo</title>
+  <link rel="icon" type="image/png" href="assets/kitsugo-logo.png">
+  <style>
+    body {
+      margin: 0;
+      padding: 10px;
+      background-color: #f0f0f0;
+      font-family: sans-serif;
+    }
+    #controles {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    button {
+      padding: 8px 12px;
+      font-size: 14px;
+    }
+    input {
+      flex: 1;
+      padding: 8px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div id="controles">
+    <button onclick="window.electronAPI.atras()">⏮️ Atrás</button>
+    <button onclick="window.electronAPI.adelante()">⏭️ Adelante</button>
+    <button onclick="window.electronAPI.home()">🏠 Inicio</button>
+    <input id="url" placeholder="https://..." />
+    <button onclick="enviarURL()">Ir</button>
+  </div>
+
+  <script>
+    function enviarURL() {
+      const urlInput = document.getElementById('url').value;
+      const finalURL = urlInput.startsWith('http') ? urlInput : 'https://' + urlInput;
+      window.electronAPI.navegarA(finalURL);
+    }
+
+    window.electronAPI.onUrlCambiada((url) => {
+      document.getElementById('url').value = url;
+    });
+  </script>
+
+  <script src="renderer.js"></script>
+</body>
+</html>

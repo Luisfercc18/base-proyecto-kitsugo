@@ -8,4 +8,3 @@ contextBridge.exposeInMainWorld('electronAPI', {
     navegarA: (url) => ipcRenderer.send('navegar-a', url),
     onUrlCambiada: (callback) => ipcRenderer.on('url-cambiada', (_e, url) => callback(url))
 });
-

@@ -1,0 +1,39 @@
+body {
+    margin: 0;
+    background-color: #0f0a1f;
+    color: white;
+    font-family: 'Segoe UI', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 80px;
+    height: 100vh;
+}
+
+.container {
+    text-align: center;
+    width: 90%;
+    max-width: 600px;
+}
+
+.logo {
+    width: 96px;
+    height: 96px;
+    margin-bottom: 30px;
+}
+
+.search-form {
+    width: 100%;
+    padding: 13px 18px;
+    border: none;
+    border-radius: 25px;
+    font-size: 18px;
+    outline: none;
+    background-color: #1d1337;
+    color: white;
+    box-shadow: 0 0 0 2px #9136ff;
+    transition: box-shadow 0.2s ease;
+}
+.search-form input:focus {
+    box-shadow: 0 0 0 2px #c87cff;
+}
