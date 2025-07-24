@@ -4,36 +4,15 @@
   <meta charset="UTF-8" />
   <title>Kitsugo</title>
   <link rel="icon" type="image/png" href="assets/kitsugo-logo.png">
-  <style>
-    body {
-      margin: 0;
-      padding: 10px;
-      background-color: #f0f0f0;
-      font-family: sans-serif;
-    }
-    #controles {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
-    button {
-      padding: 8px 12px;
-      font-size: 14px;
-    }
-    input {
-      flex: 1;
-      padding: 8px;
-      font-size: 14px;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="controles">
-    <button onclick="window.electronAPI.atras()">⏮️ Atrás</button>
-    <button onclick="window.electronAPI.adelante()">⏭️ Adelante</button>
-    <button onclick="window.electronAPI.home()">🏠 Inicio</button>
-    <input id="url" placeholder="https://..." />
-    <button onclick="enviarURL()">Ir</button>
+  <div class="browser-controls">
+    <button class="icon-btn" onclick="window.electronAPI.atras()" title="Haz click para volver atrás">⮜</button>
+    <button class="icon-btn" onclick="window.electronAPI.adelante()" title="Haz click para ir adelante">⮞</button>
+    <button class="icon-btn" onclick="window.electronAPI.recargar()" title="Recargar esta pagina">⟳</button>
+    <button class="icon-btn" onclick="window.electronAPI.home()" title="Abre la pagina principal">⌂</button>
+    <input id="url" class="address-bar" placeholder="https://..." />
   </div>
 
   <script>

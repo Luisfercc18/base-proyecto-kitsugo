@@ -1,46 +1,29 @@
-const barra = document.getElementById('url');
-const botonIr = document.querySelector('button:last-of-type');
-const barraInicio = document.getElementById('inputInicio'); // ID del input de la página de inicio
-const botonBuscarInicio = document.getElementById('btnBuscar'); // ID del botón de buscar en la página de inicio
+const campoURL = document.getElementById("url");
 
-console.log('Bara', barraInicio);
-console.log('Boton', botonBuscarInicio);
+if (campoURL) {
+  campoURL.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      const valor = campoURL.value.trim();
+      if (!valor) return;
 
-function procesarEntrada(entrada) {
-    if (!entrada) return;
+      let urlFinal = valor;
 
-    entrada = entrada.trim();
-    const esURL = /^https?:\/\/|\.|localhost/.test(entrada) && !/\s/.test(entrada);
+      // Si no empieza con http(s), revisamos si parece una URL
+      if (!/^https?:\/\//i.test(valor)) {
+        if (/^[\w.-]+\.[a-z]{2,}/i.test(valor)) {
+          // Parece un dominio, agregamos https://
+          urlFinal = `https://${valor}`;
+        } else {
+          // Si no parece dominio, lo tratamos como búsqueda
+          urlFinal = `https://www.google.com/search?q=${encodeURIComponent(valor)}`;
+        }
+      }
 
-    let urlFinal;
-
-    if (esURL) {
-        urlFinal = entrada.startsWith("http") ? entrada : "https://" + entrada;
-    } else {
-        urlFinal = `https://www.google.com/search?q=${encodeURIComponent(entrada)}`;
+      window.electronAPI.irA(urlFinal);
     }
+  });
 
-    window.electronAPI.navegarA(urlFinal);
+  window.electronAPI.onUrlCambiada((nuevaURL) => {
+    campoURL.value = nuevaURL;
+  });
 }
-
-// Evento para botón "Ir" en barra principal
-if (botonIr && barra) {
-    botonIr.addEventListener('click', () => procesarEntrada(barra.value));
-    barra.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') procesarEntrada(barra.value);
-    });
-}
-
-// Evento para botón "Buscar" en página de inicio
-if (botonBuscarInicio && barraInicio) {
-    botonBuscarInicio.addEventListener('click', () => procesarEntrada(barraInicio.value));
-    barraInicio.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') procesarEntrada(barraInicio.value);
-    });
-}
-
-// Mostrar en la barra principal la URL actual
-window.electronAPI.onUrlCambiada((url) => {
-    console.log('URL CAMBIADA:', url);
-    if (barra) barra.value = url;
-});

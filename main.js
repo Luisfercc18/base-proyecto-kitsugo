@@ -3,6 +3,7 @@ const path = require('path');
 
 let ventana;
 let vista;
+const rutaInicio = path.join(__dirname, 'index.html'); // <- definido globalmente
 
 function crearVentana() {
   ventana = new BrowserWindow({
@@ -16,10 +17,8 @@ function crearVentana() {
     },
   });
 
-  // Cargar la barra del navegador (interfaz fija)
   ventana.loadFile('interfaz.html');
 
-  // Crear el BrowserView
   vista = new BrowserView({
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
@@ -27,17 +26,12 @@ function crearVentana() {
       nodeIntegration: false,
     }
   });
+
   vista.setBounds({ x: 0, y: 60, width: 1000, height: 740 });
   vista.setAutoResize({ width: true, height: true });
-
-  // Insertar el BrowserView en la ventana
   ventana.setBrowserView(vista);
-
-  // Cargar la página de inicio (con el logo y buscador)
-  const rutaInicio = path.join(__dirname, 'index.html');
   vista.webContents.loadFile(rutaInicio);
 
-  // Actualizar input de URL cuando cambia
   vista.webContents.on('did-navigate', (event, url) => {
     ventana.webContents.send('url-cambiada', url);
   });
@@ -46,14 +40,11 @@ function crearVentana() {
     ventana.webContents.send('url-cambiada', url);
   });
 
-  // Ajustar el tamaño del BrowserView al redimensionar
   ventana.on('resize', () => {
     const { width, height } = ventana.getBounds();
-    const alturaVisible = height - 60;
-    vista.setBounds({ x: 0, y: 60, width, height: alturaVisible });
+    vista.setBounds({ x: 0, y: 60, width, height: height - 60 });
   });
 
-  // Navegación básica
   ipcMain.on('navegar-atras', () => {
     if (vista.webContents.canGoBack()) vista.webContents.goBack();
   });
@@ -63,23 +54,28 @@ function crearVentana() {
   });
 
   ipcMain.on('navegar-a', (_event, url) => {
-    if (!ventana.getBrowserView()) {
-      ventana.setBrowserView(vista);
-    }
+    if (!ventana.getBrowserView()) ventana.setBrowserView(vista);
     vista.webContents.loadURL(url);
   });
 
-  ipcMain.on('navegar-home', () => {
-    if (!ventana.getBrowserView()) {
-      ventana.setBrowserView(vista);
+  ipcMain.on('navegar-home', async () => {
+    const actual = vista.webContents.getURL();
+    const esperada = `file://${rutaInicio.replace(/\\/g, '/')}`;
+
+    if (actual === esperada) {
+      vista.webContents.reload();
+    } else {
+      vista.webContents.loadFile(rutaInicio);
     }
-    const rutaInicio = path.join(__dirname, 'index.html');
-    vista.webContents.loadFile(rutaInicio);
+  });
+  ipcMain.on('recargar-vista', () => {
+    if (vista && vista.webContents) {
+      vista.webContents.reload();
+    }
   });
 }
 
 app.whenReady().then(crearVentana);
-
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
 });
