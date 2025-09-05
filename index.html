@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kitsugo</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body data-inicio="true">
+  <div class="wrapper">
+    <div class="contenedor">
+      <h1>Kitsugo</h1>
+      <img src="assets/kitsugo-logo.png" alt="Kitsugo Logo" class="logo">
+      <h1>Bienvenido a Kitsugo</h1>
+      <p>Tu Navegador Privado y Personal</p>
+
+      <form class="search-bar" onsubmit="return false;">
+        <input type="text" id="inputInicio" placeholder="Buscar o escribir URL...">
+        <button id="btnBuscar" type="button">Buscar</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const btnBuscar = document.getElementById("btnBuscar");
+    const input = document.getElementById("inputInicio");
+
+    function navegar() {
+      const valor = input.value.trim();
+      if (!valor) return;
+      let urlFinal = valor;
+
+      if (!/^https?:\/\//i.test(valor)) {
+        urlFinal = `https://www.google.com/search?q=${encodeURIComponent(valor)}`;
+      }
+
+      window.electronAPI.irA(urlFinal);
+    }
+
+    btnBuscar.addEventListener("click", navegar);
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") navegar();
+    });
+  </script>
+</body>
+</html>

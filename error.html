@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Error de carga</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="error-page">
+        <img src="assets/logo-error.png" alt="logo-error" class="logo">
+        <h1>Error de carga</h1>
+        <h2>Kitsugo intentó cargar la página…</h2>
+        <h3>pero se perdió en el vacío.</h3>
+        <p>Código de error: <span id="errorCode"></span></p>
+        <p>No se encontró una página web para mostrar: <span id="errorDescription"></span></p>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const errorCode = urlParams.get('errorCode');
+        const errorDescription = urlParams.get('errorDescription');
+
+        if (errorCode && errorDescription) {
+            document.getElementById('errorCode').textContent = errorCode;
+            document.getElementById('errorDescription').textContent = errorDescription;
+        } else {
+            // Por si se usa IPC
+            const { ipcRenderer } = require('electron');
+            ipcRenderer.send('get-error-info');
+            ipcRenderer.on('error-info', (_event, code, description) => {
+                document.getElementById('errorCode').textContent = code || 'Error desconocido';
+                document.getElementById('errorDescription').textContent = description || 'No se pudo cargar la página.';
+            });
+        }
+    </script>
+</body>
+</html>

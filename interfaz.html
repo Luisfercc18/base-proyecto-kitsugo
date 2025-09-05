@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Kitsugo</title>
+  <link rel="icon" type="image/png" href="assets/kitsugo-logo.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="titulo-barra">
+    <button id="minimizar" title="Minimizar">
+    <svg width="18" height="18" viewBox="0 0 18 18">
+      <rect x="4" y="9" width="10" height="2" rx="1" fill="white"/>
+    </svg>
+  </button>
+  <button id="maximizar" title="Maximizar">
+    <svg width="18" height="18" viewBox="0 0 18 18">
+      <rect x="4" y="4" width="10" height="10" rx="2" fill="white" stroke="white" stroke-width="1"/>
+    </svg>
+  </button>
+  <button id="cerrar" title="Cerrar">
+    <svg width="18" height="18" viewBox="0 0 18 18">
+      <line x1="5" y1="5" x2="13" y2="13" stroke="white" stroke-width="2"/>
+      <line x1="13" y1="5" x2="5" y2="13" stroke="white" stroke-width="2"/>
+    </svg>
+  </button>
+</div>
+  <div class="browser-controls">
+    <button class="icon-btn" onclick="window.electronAPI.atras()" title="Haz click para volver atrás">⮜</button>
+    <button class="icon-btn" onclick="window.electronAPI.adelante()" title="Haz click para ir adelante">⮞</button>
+    <button class="icon-btn" onclick="window.electronAPI.recargar()" title="Recargar esta pagina">⟳</button>
+    <button class="icon-btn" onclick="window.electronAPI.home()" title="Abre la pagina principal">⌂</button>
+    <input id="url" class="address-bar" placeholder="https://..." />
+  </div>
+
+  <script>
+    function enviarURL() {
+      const urlInput = document.getElementById('url').value;
+      const finalURL = urlInput.startsWith('http') ? urlInput : 'https://' + urlInput;
+      window.electronAPI.navegarA(finalURL);
+    }
+
+    window.electronAPI.onUrlCambiada((url) => {
+      document.getElementById('url').value = url;
+    });
+  </script>
+
+  <script src="renderer.js"></script>
+</body>
+</html>
